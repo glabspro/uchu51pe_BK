@@ -1,0 +1,7 @@
+{
+  "name": "Uchu51",
+  "description": "Uchu51 es un Sistema todo en uno para restaurantes peruanos (POS + gestión + delivery + reservas).",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

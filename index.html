@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uchu51</title>
+    <link rel="icon" href="/icon-192x192.png" type="image/png">
+
+    <!-- PWA Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#F97316" />
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Fredoka:wght@600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            background: '#FDFCFB',
+            surface: '#FFFFFF',
+            primary: {
+              DEFAULT: '#F97316',
+              dark: '#EA580C',
+            },
+            accent: {
+              DEFAULT: '#FFC700',
+              dark: '#EAB308',
+            },
+            text: {
+              primary: '#44281D',
+              secondary: '#786d69',
+            },
+            success: '#16A34A',
+            danger: '#DC2626',
+            warning: '#F59E0B',
+          }
+        }
+      }
+    }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  @keyframes fade-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .animate-fade-in-right {
+    animation: fade-in-right 0.4s ease-out forwards;
+  }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes fade-in-scale {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .animate-fade-in-scale {
+    animation: fade-in-scale 0.3s ease-out forwards;
+  }
+  
+  @keyframes slide-in-from-right {
+    from {
+        opacity: 0;
+        transform: translateX(1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+  }
+
+  /* New styles for LocalBoard */
+  .table-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+  }
+  .table-card:hover {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) scale3d(1.05, 1.05, 1.05);
+  }
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 12px 0px rgba(var(--glow-color), 0.6);
+    }
+    50% {
+      box-shadow: 0 0 24px 10px rgba(var(--glow-color), 0.3);
+    }
+  }
+  .animate-pulse-glow {
+    --glow-color: 249, 115, 22; /* Default: Primary color */
+    animation: pulse-glow 2.5s infinite ease-in-out;
+  }
+
+  @keyframes fly-to-cart {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+  }
+
+  @keyframes cart-jiggle {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(0.95) rotate(-3deg); }
+    50% { transform: scale(1.1) rotate(3deg); }
+    75% { transform: scale(1.05) rotate(-1deg); }
+  }
+
+  .animate-cart-jiggle {
+    animation: cart-jiggle 0.4s ease-in-out;
+  }
+
+  .product-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+  .product-card:hover {
+      transform: perspective(1000px) translateY(-4px) rotateX(2deg) rotateY(-2deg) scale3d(1.03, 1.03, 1.03);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.05);
+  }
+  .dark .product-card:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(249, 115, 22, 0.3);
+  }
+
+  @media print {
+    body.uchu-printing {
+      background-color: #fff !important;
+    }
+    /* Hide everything by default when printing */
+    body.uchu-printing > * {
+      visibility: hidden !important;
+    }
+    /* Make only the printable modal and its contents visible */
+    body.uchu-printing .printable-modal,
+    body.uchu-printing .printable-modal * {
+        visibility: visible !important;
+    }
+    body.uchu-printing .printable-modal {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      overflow: visible !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background-color: #fff !important;
+    }
+    body.uchu-printing .printable-modal > div {
+       box-shadow: none !important;
+       border: none !important;
+       background-color: #fff !important;
+    }
+    body.uchu-printing .printable-modal-content {
+      font-family: 'Courier New', Courier, monospace !important;
+    }
+    /* Force all text inside the receipt to be black for printing */
+    body.uchu-printing .printable-modal-content,
+    body.uchu-printing .printable-modal-content * {
+      color: #000 !important;
+    }
+    /* Handle specific secondary text colors */
+    body.uchu-printing .printable-modal-content .text-text-secondary,
+    body.uchu-printing .printable-modal-content .dark\:text-slate-400,
+    body.uchu-printing .printable-modal-content .dark\:text-slate-500 {
+        color: #444 !important;
+    }
+    /* Ensure borders are visible */
+     body.uchu-printing .printable-modal-content .border-gray-300,
+     body.uchu-printing .printable-modal-content .dark\:border-slate-600 {
+        border-color: #888 !important;
+    }
+    /* Hide elements that should not be printed */
+    body.uchu-printing .no-print {
+      display: none !important;
+    }
+    
+    /* New styles for report printing */
+    body.uchu-printing .printable-report,
+    body.uchu-printing .printable-report * {
+      visibility: visible !important;
+    }
+    body.uchu-printing .printable-report {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      padding: 1rem !important;
+      background: #fff !important;
+    }
+     body.uchu-printing .printable-report,
+     body.uchu-printing .printable-report * {
+        color: #000 !important;
+        background-color: #fff !important;
+     }
+     body.uchu-printing .printable-report table,
+     body.uchu-printing .printable-report th,
+     body.uchu-printing .printable-report td {
+        border: 1px solid #ccc !important;
+        padding: 8px !important;
+        text-align: left !important;
+     }
+      body.uchu-printing .printable-report th {
+        font-weight: bold;
+      }
+  }
+</style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased bg-background text-text-primary dark:bg-slate-900 dark:text-slate-200">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
